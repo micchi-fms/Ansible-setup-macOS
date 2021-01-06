@@ -1,0 +1,12 @@
+crypto_format: ed25519
+github_ssh_id: Ansible-github-{{crypto_format}}
+github_ssh_path: "{{ ansible_facts['env']['HOME'] }}/.ssh/{{ github_ssh_id }}"
+github_ssh_config:
+  name: config
+  content: |
+    Host github github.com
+      HostName github.com
+      AddKeysToAgent yes
+      UseKeychain yes
+      Identityfile ~/.ssh/{{ github_ssh_id }}
+      User git

@@ -1,0 +1,5 @@
+restart_command:
+  - killall Finder
+  - killall SystemUIServer
+
+screenshot_path: "{{ ansible_facts['env']['HOME'] }}/ScreenShot"

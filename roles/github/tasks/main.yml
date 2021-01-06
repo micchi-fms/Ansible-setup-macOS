@@ -1,0 +1,63 @@
+# 公式ドキュメントとほぼ同じ手順：https://docs.github.com/ja/free-pro-team@latest/github/authenticating-to-github/connecting-to-github-with-ssh
+- block:
+  - name: generate ssh keys by using ssh-keygen
+    community.crypto.openssh_keypair:
+      comment: "{{ git_email }}"
+      type: "{{ crypto_format }}"
+      path: "{{ github_ssh_path }}"
+  
+  - name: take ssh_key
+    ansible.builtin.shell: cat "{{ github_ssh_path }}.pub"
+    register: ssh_key
+
+  - fail:
+      msg: ssh public key is empty
+    when: ssh_key.stdout == ""
+
+  - name: register github ssh key
+    local_action:
+      module: github_key
+      name: "{{ github_ssh_id }}"
+      token: "{{ GITHUB_ACCESS_TOKEN }}"
+      pubkey: "{{ ssh_key.stdout }}"
+    register: github_ssh_registered
+    ignore_errors: true
+
+  - ansible.builtin.fail:
+      msg: "Can not register {{ github_ssh_path }} to Github"
+    when: github_ssh_registered is not skipped and github_ssh_registered is failed and (github_ssh_registered.msg.find('already registered') < 0)
+
+
+  - name: append configs into .ssh/
+    ansible.builtin.blockinfile:
+      path: "{{ ansible_facts['env']['HOME'] }}/.ssh/{{ item.name }}"
+      marker: "# {mark} ANSIBLE GITHUB_SSH"
+      create: yes
+      mode: 0644
+      block: "{{ item.content }}"
+    loop:
+      - "{{ github_ssh_config }}"
+
+  # not work
+  # - name: register ssh-agent
+  #   expect: 
+  #     command: "eval `ssh-agent -s` && ssh-add {{ github_ssh_path }}"
+  #     responses: 
+  #       Enter passphrase for .*: "\n"
+
+  - name: register ssh-agent
+    shell: "eval `ssh-agent -s` && ssh-add {{ github_ssh_path }}"
+  
+  # you should check to use `ssh -T git@github.com` manually.
+  # If you use this task, you should install Python module named `pexpect` 
+  # and specify Python interpreter path in `ansible.cfg`
+  # Even if it succeeds to use this task, an error code is returned
+  # - name: check to access
+  #   expect:
+  #     command: ssh -T git@github.com
+  #     responses:
+  #       Are you sure you want to continue connecting (yes/no)?: "yes\n"
+  
+  tags:
+    - github
+  

@@ -1,0 +1,34 @@
+- block:
+  - name: launch Zsh
+    shell: zsh
+  - name: git clone prezto (setting for prezto)
+    ansible.builtin.git:
+      repo: "https://github.com/sorin-ionescu/prezto.git"
+      dest: "{{ ansible_facts['env']['HOME'] }}/.zprezto"
+      recursive: true
+      update: yes
+      force: yes
+  - name: Make symbolic link for prezto (setting for prezto)
+    file:
+      src: "{{ ansible_facts['env']['HOME'] }}/.zprezto/runcoms/{{ item }}"
+      path: "{{ ansible_facts['env']['HOME'] }}/.{{ item }}"
+      state: link
+    loop:
+      - zlogin
+      - zlogout
+      - zshenv
+      - zprofile
+
+  - name: Configure prezto and other
+    ansible.builtin.template:
+      src: "temp.{{ item }}"
+      dest: "{{ ansible_facts['env']['HOME'] }}/.{{ item }}"
+      force: yes
+    loop:
+      - zpreztorc
+      - zshrc
+
+  # - name: set Zsh as your default shell
+  #   shell: chsh -s /bin/zsh
+  tags:
+    - zshconfig

@@ -1,0 +1,10 @@
+{
+    "extensions.ignoreRecommendations": true,
+    // "editor.minimap.enabled": false,
+    // open files always in a new tab
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.enablePreviewFromQuickOpen": false,
+    // setting for powerlevel10k
+    "terminal.integrated.fontFamily": "MesloLGS NF",
+    "terminal.integrated.fontSize": 14
+}

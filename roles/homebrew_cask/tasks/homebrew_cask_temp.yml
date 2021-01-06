@@ -1,0 +1,13 @@
+- name: Check to see if "{{ item.name }}" is installed
+  command: brew list --cask "{{ item.name }}"
+  register: result
+  ignore_errors: true
+  changed_when: false
+
+- name: Try to install the "{{ item.name }}" cask
+  command: brew install --cask --appdir=/Applications "{{ item.name }}"
+  # community.general.homebrew:
+  #   name: "{{ item.name }}"
+  #   install_options: 'cask,appdir=/Applications'
+  #   state: present
+  when: result is failed

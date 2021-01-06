@@ -1,0 +1,21 @@
+# Please sign into the Mac App Store app manually.
+- block:
+  - name: install mas fomula and check
+    community.general.homebrew:
+      name: mas
+      state: present
+    register: brew_result_mas
+
+  # - name: install MAC App by using mas-cli
+  #   community.general.mas:
+  #     id: '{{ item }}'
+  #     state: present
+  #   loop: '{{ mas_cli_packages }}'
+  #   when: brew_result_mas is succeeded
+
+  - name: purchase MAC App by using mas-cli
+    include_tasks: mas_purchase_temp.yml
+    loop: '{{ mas_cli_packages }}'
+    when: brew_result_mas is succeeded
+  tags:
+    - mas

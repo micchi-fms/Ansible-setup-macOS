@@ -1,0 +1,14 @@
+- block:
+  - name: configure global gitconfig
+    ansible.builtin.template:
+      src: temp.gitconfig.j2
+      dest: "{{ ansible_facts['env']['HOME'] }}/.gitconfig"
+      mode: 0644
+
+  - name: configure global gitignore
+    ansible.builtin.template:
+      src: temp.gitignore
+      dest: "{{ ansible_facts['env']['HOME'] }}/.gitignore_global"
+      mode: 0644
+  tags:
+    - git

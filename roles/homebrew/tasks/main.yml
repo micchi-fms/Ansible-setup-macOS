@@ -1,0 +1,20 @@
+# idempotence
+- block:
+  - name: homebrew update
+    community.general.homebrew:
+      update_homebrew: yes
+
+  - name: homebrew tap
+    community.general.homebrew_tap:
+      name: '{{ item }}'
+      state: present
+    loop: '{{ homebrew_taps }}'
+
+  - name: homebrew packages install
+    community.general.homebrew:
+      name: '{{ item.name }}'
+      state: '{{ item.state | default("present") }}'
+    loop: '{{ homebrew_packages }}'
+
+  tags:
+    - homebrew

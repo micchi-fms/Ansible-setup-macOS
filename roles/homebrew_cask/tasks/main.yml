@@ -1,0 +1,24 @@
+# idempotence
+- block:
+  - name: homebrew update
+    community.general.homebrew:
+      update_homebrew: yes
+
+  - name: homebrew tap
+    community.general.homebrew_tap:
+      name: '{{ item }}'
+      state: present
+    loop: '{{ homebrew_taps }}'
+
+  # - name: homebrew cask packages install
+  #   community.general.homebrew_cask: name={{ item.name }} state=installed
+  #   environment:
+  #     HOMEBREW_CASK_OPTS: "--appdir=/Applications" #specify directory path of homebrew_cask 
+  #   ignore_errors: yes
+  #   loop: '{{ homebrew_cask_packages }}'
+
+  - name: install homebrew cask packages
+    include_tasks: homebrew_cask_temp.yml
+    loop: '{{ homebrew_cask_packages }}'
+  tags:
+    - homebrew_cask

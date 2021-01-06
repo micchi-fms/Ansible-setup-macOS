@@ -1,0 +1,14 @@
+- name: check to install "{{ item }}"
+  shell: "mas list | grep -w {{ item }}"
+  register: result
+  ignore_errors: true
+  changed_when: false
+
+- name: try to install "{{ item }}"
+  shell: "mas purchase {{ item }}"
+  when: result.rc > 0
+
+- name: already installed "{{ item }}"
+  debug:
+    msg: "{{result.stdout}}"
+  when: result.rc == 0

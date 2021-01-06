@@ -1,0 +1,58 @@
+- block:
+  - name: Check if anyenv installed
+    stat:
+      path: "{{ ansible_facts['env']['HOME'] }}/.anyenv"
+    register: anyenv
+
+  - name: Install anyenv
+    ansible.builtin.git:
+      repo: "https://github.com/anyenv/anyenv"
+      dest: "{{ ansible_facts['env']['HOME'] }}/.anyenv"
+      depth: 1
+    when: not anyenv.stat.exists
+
+  - name: Install anyenv updater
+    ansible.builtin.git:
+      repo: https://github.com/znz/anyenv-update.git
+      dest: "{{ ansible_facts['env']['HOME'] }}/.anyenv/plugins/anyenv-update"
+      depth: 1
+    when: not anyenv.stat.exists
+
+  - name: Install anyenv git
+    ansible.builtin.git:
+      repo: https://github.com/znz/anyenv-git.git
+      dest: "{{ ansible_facts['env']['HOME'] }}/.anyenv/plugins/anyenv-git"
+      depth: 1
+    when: not anyenv.stat.exists
+  
+  - name: add PATH to .zshrc for connecting anyenv
+    ansible.builtin.blockinfile:
+      path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
+      marker: "# {mark} ANSIBLE anyenv"
+      create: yes
+      block: |
+        if [ -e "$HOME/.anyenv" ]
+        then
+            export ANYENV_ROOT="$HOME/.anyenv"
+            export PATH="$ANYENV_ROOT/bin:$PATH"
+            if command -v anyenv 1>/dev/null 2>&1
+            then
+                eval "$(anyenv init -)"
+            fi
+        fi
+
+  - name: check install manifest directory
+    stat:
+      path: "{{ ansible_facts['env']['HOME'] }}/.config/anyenv/anyenv-install"
+    register: anyenv_install_dir
+
+  - name: Initialize anyenv
+    ansible.builtin.shell: "{{ ansible_facts['env']['HOME'] }}/.anyenv/bin/anyenv install --force-init"
+    when: not anyenv_install_dir.stat.exists
+
+  - name: Install anyenv plugins
+    ansible.builtin.shell: "{{ ansible_facts['env']['HOME'] }}/.anyenv/bin/anyenv install {{ item }} --skip-existing"
+    loop: "{{ anyenv_plugins }}"
+
+  tags:
+    - anyenv

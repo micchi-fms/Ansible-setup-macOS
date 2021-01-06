@@ -1,0 +1,18 @@
+[core]
+	excludesfile = {{ ansible_facts['env']['HOME'] }}/.gitignore_global
+	autocrlf = false
+	ignorecase = false
+	quotepath = false
+[user]
+	name = {{ git_user }}
+	email = {{ git_email }}
+[push]
+	default = simple
+[pull]
+	ff = only
+[color]
+	ui = true
+[credential]
+	helper = osxkeychain
+[init]
+	defaultBranch = main

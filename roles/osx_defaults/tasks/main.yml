@@ -1,0 +1,34 @@
+- block:
+  - name: Make directory for saving screenshot
+    ansible.builtin.file: 
+      path: "{{ screenshot_path }}"
+      state: directory
+
+  - name: 'setting macOS'
+    community.general.osx_defaults: 
+      domain: "{{ item.domain }}"
+      key: "{{ item.key }}"
+      type: "{{ item.type }}"
+      value: "{{ item.value }}"
+      state: "{{ item.state|default('present') }}"
+    loop:
+      # Change screencapture location
+      - { domain: com.apple.screencapture, key: location, type: string, value: "{{ screenshot_path }}" }
+      # Disable shadow in screencapture 
+      - { domain: com.apple.screencapture, key: disable-shadow, type: bool, value: true }
+      # change screenshot name
+      - { domain: com.apple.screencapture, key: name, type: string, value: "ScreenShot" }
+      # Show Status bar in Finder (need "killall Finder")
+      - { domain: com.apple.finder, key: ShowStatusBar, type: bool, value: true }
+      # Show Path bar in Finder
+      - { domain: com.apple.finder, key: ShowPathbar, type: bool, value: true }
+      # Show Tab bar in Finder
+      - { domain: com.apple.finder, key: ShowTabView, type: bool, value: true }
+      # Show the hidden files
+      - { domain: com.apple.finder, key: AppleShowAllFiles, type: bool, value: true }
+      # Show the battery percentage from the menu bar (need "killall SystemUIServer")
+      - { domain: com.apple.menuextra.battery, key: ShowPercent, type: string, value: "YES" }
+    notify: 
+      - restart osx_defaults
+  tags:
+    - osx_defaults

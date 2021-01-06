@@ -1,0 +1,65 @@
+git_user: 
+git_email: 
+GITHUB_ACCESS_TOKEN: 
+anyenv_plugins:
+  - nodenv
+homebrew_taps:
+  - homebrew/cask
+  - homebrew/core
+homebrew_packages:
+  # - name: ansible
+  - name: git
+  - name: tree
+  - name: vim
+  - name: wget
+  - name: mas
+homebrew_cask_packages:
+  # install error on 30 Nov (issue:https://github.com/geerlingguy/ansible-role-homebrew/issues/148)
+  - name: docker
+  - name: google-chrome
+  - name: google-japanese-ime
+  - name: slack
+  - name: sourcetree
+  - name: iterm2
+  # - name: appcleaner
+  # - name: cyberduck
+  # - name: station
+  # - name: visual-studio-code
+mas_cli_packages:
+  - 425955336 # skitch
+  - 539883307 #LINE
+  - 485812721 #TweetDeck by Twitter
+dot_files:
+  - .bash_profile
+  - .bashrc
+  - .vimrc
+code_extensions:
+  - abusaidm.html-snippets
+  - acidic9.p5js-snippets
+  - CoenraadS.bracket-pair-colorizer
+  - dbaeumer.vscode-eslint
+  - esbenp.prettier-vscode
+  - hex-ci.stylelint-plus
+  - jebbs.plantuml
+  - ms-azuretools.vscode-docker
+  - MS-CEINTL.vscode-language-pack-ja
+  - ms-dotnettools.csharp
+  - ms-kubernetes-tools.vscode-kubernetes-tools
+  - ms-python.python
+  - ms-toolsai.jupyter
+  - ms-vscode-remote.remote-containers
+  - ms-vscode-remote.remote-ssh
+  - ms-vscode-remote.remote-ssh-edit
+  - ms-vscode-remote.remote-wsl
+  - ms-vscode-remote.vscode-remote-extensionpack
+  - ms-vscode.sublime-keybindings
+  - ms-vsliveshare.vsliveshare
+  - msjsdiag.debugger-for-chrome
+  - octref.vetur
+  - oderwat.indent-rainbow
+  - redhat.java
+  - redhat.vscode-yaml
+  - Syler.sass-indented
+  - VisualStudioExptTeam.vscodeintellicode
+  - vscode-icons-team.vscode-icons
+  - eamodio.gitlens

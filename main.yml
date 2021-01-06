@@ -1,0 +1,17 @@
+---
+- hosts: localhost
+  connection: local
+  # gather_facts: no
+  become: no
+  roles:
+    - homebrew
+    - homebrew_cask
+    - mas
+    - osx_defaults
+    - zshconfig
+    - vscode
+    - git
+    - github
+    - anyenv
+    # - dotfiles
+...
